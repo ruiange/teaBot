@@ -1,11 +1,9 @@
-import json
 import logging
 import re
 import time
 
 import requests
 
-from server.send_file import send_file_message
 from server.send_image import send_image_message
 from utils.download import download
 

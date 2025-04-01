@@ -1,17 +1,14 @@
-import logging
 import json
-from queue import Empty
+import logging
 import time
-from datetime import datetime
+from queue import Empty
 
-import xml.etree.ElementTree as ET
 import requests  # 添加requests库导入
 
+import config
 from server.commander import bot_commander
 from server.send_text import send_text_message
 from utils.ai_reply import ai_reply
-
-import config
 
 
 def get_msg_type(type_id):

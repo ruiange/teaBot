@@ -1,10 +1,6 @@
-import json
 import sys
 from wcferry import Wcf
-from datetime import datetime
 import logging
-import time
-from queue import Empty
 import os
 import threading
 from server.message_listener import listen_for_messages
