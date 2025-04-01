@@ -8,15 +8,19 @@
     - [x] 自动回复
     - [ ] 多轮回复
 
+## 支持版本
+3.9.12.17
 
 ### 本地启动步骤
 根目录执行
 ```pip
 pip install -r requirements.txt
 ```
+新建.env文件，参考.env.example
 ```text
 python main.py
 ```
+
 
 
 ### 打包步骤
