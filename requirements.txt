@@ -1,0 +1,7 @@
+wcferry==39.4.*
+openai
+dotenv
+python-dotenv
+requests
+tqdm
+cffi
