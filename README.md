@@ -9,7 +9,7 @@
     - [ ] 多轮回复
 
 
-## 步骤
+### 本地启动步骤
 
 根目录执行
 ```pip
@@ -20,4 +20,10 @@ pip install -r requirements.txt
 根目录执行
 ```text
 python main.py
+```
+
+
+### 打包步骤
+```text
+pyinstaller --onefile --add-data "C:\Users\bombi\teaBot\.venv\Lib\site-packages\wcferry;wcferry" --hidden-import "_cffi_backend" main.py
 ```

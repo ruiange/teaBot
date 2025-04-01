@@ -5,3 +5,7 @@ data/
 .venv/
 file/
 logs/
+dist/
+build/
+main.spec
+sdk/
