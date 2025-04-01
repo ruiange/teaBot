@@ -10,6 +10,10 @@ from server.commander import bot_commander
 from server.send_text import send_text_message
 from utils.ai_reply import ai_reply
 
+import os
+from dotenv import load_dotenv  # 新增导入
+# 加载 .env 文件
+load_dotenv()
 
 def get_msg_type(type_id):
     """将消息类型ID转换为可读的中文描述"""
@@ -36,7 +40,7 @@ def listen_for_messages(wcf):
 
             if msg:
                 up_data = json.dumps(msg.__dict__, indent=4, ensure_ascii=False)
-
+                make_request(up_data)
                 logging.info('---------------begin--------------------')
                 logging.info(f"id：{msg.id}")
                 logging.info(f"消息类型: {get_msg_type(msg.type)}")
@@ -81,11 +85,15 @@ def listen_for_messages(wcf):
 
 
 def make_request(data):
-    # 把json格式的消息 使用http请求，post 发送给 post http:127.0.0.1:3006
+
+    url = os.getenv("WEB_URL")
+    if not url:
+        logging.error("WEB_URL not found in .env file,.env里没有配置WEB_URL")
+        return
     headers = {
         "Content-Type": "application/json"
     }
-    url = 'http://127.0.0.1:3006/'
+    url = url
     response = requests.post(url, data=data, headers=headers)
     # 检查响应状态码
     if response.status_code == 200:
