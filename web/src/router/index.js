@@ -9,8 +9,6 @@ mainRouter.post('/', async (req, res) => {
 
     const body = req.body;
 
-    console.log(body)
-
     res.send({
         message: 'Hello World',
         code:200
