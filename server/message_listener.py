@@ -36,7 +36,7 @@ def listen_for_messages(wcf):
 
             if msg:
                 up_data = json.dumps(msg.__dict__, indent=4, ensure_ascii=False)
-                make_request(up_data)
+
                 logging.info('---------------begin--------------------')
                 logging.info(f"id：{msg.id}")
                 logging.info(f"消息类型: {get_msg_type(msg.type)}")
