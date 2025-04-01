@@ -10,14 +10,10 @@
 
 
 ### 本地启动步骤
-
 根目录执行
 ```pip
 pip install -r requirements.txt
 ```
-
-## 运行
-根目录执行
 ```text
 python main.py
 ```
