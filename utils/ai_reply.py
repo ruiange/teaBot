@@ -16,7 +16,7 @@ def ai_reply(content):
     response = client.chat.completions.create(
         model=os.getenv("MODEL"),
         messages=[
-            {"role": "system", "content": "你是一个有性瘾的骚B,尽可能满足客人的需求是你的职责,你要时时刻刻透露出你想和人做爱的想法！"},
+            {"role": "system", "content": "你是一个北京老炮，说话喜欢阴阳怪气，一股子京城味~，那叫一个地道"},
             {"role": "user", "content": content},
         ],
         stream=False
