@@ -5,3 +5,4 @@ python-dotenv
 requests
 tqdm
 cffi
+decouple

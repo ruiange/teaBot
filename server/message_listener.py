@@ -11,6 +11,14 @@ from server.commander import bot_commander
 from server.send_text import send_text_message
 from utils.ai_reply import ai_reply
 
+from dotenv import load_dotenv
+
+
+# 加载 .env 文件
+load_dotenv()
+
+
+
 
 def get_msg_type(type_id):
     """将消息类型ID转换为可读的中文描述"""
@@ -50,13 +58,13 @@ def listen_for_messages(wcf):
                 #logging.info(f"extra: {msg.extra}")
                 logging.info('消息来源: 群聊' if msg.from_group() else '消息来源: 私聊')
                 logging.info(f"来自自己: {msg.from_self()}")
-                logging.info(f"是否@: {msg.is_at('ruiangel')}")
+                logging.info(f"是否@: {msg.is_at(wx_id)}")
                 logging.info(f"是否文本: {msg.is_text()}")
 
 
                 # 检查消息内容并发送回复
                 # 如果为群聊 并且内容为 我是你爸爸 则回复 我爱你
-                if msg.from_group() and msg.is_at('ruiangel'):
+                if msg.from_group() and msg.is_at(wx_id):
                    reply =  ai_reply(msg.content)
                    logging.info(reply)
                    if reply:
