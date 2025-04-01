@@ -9,3 +9,11 @@ dist/
 build/
 main.spec
 sdk/
+__pycache__/config.cpython-312.pyc
+server/__pycache__/commander.cpython-312.pyc
+server/__pycache__/message_listener.cpython-312.pyc
+server/__pycache__/send_file.cpython-312.pyc
+server/__pycache__/send_image.cpython-312.pyc
+server/__pycache__/send_text.cpython-312.pyc
+utils/__pycache__/ai_reply.cpython-312.pyc
+utils/__pycache__/download.cpython-312.pyc
