@@ -29,12 +29,9 @@ logging.basicConfig(
     ]
 )
 
+# 修改全局信息
 def modify_wxid(wxid):
-    logging.info("=====修改微信号======")
     config.GLOBAL_WXID = wxid
-
-    logging.info(config.GLOBAL_WXID)
-    logging.info("=====修改微信号end======")
 
 def print_login_info(wcf):
     """打印登录账号信息"""
