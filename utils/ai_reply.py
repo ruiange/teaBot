@@ -2,21 +2,24 @@ import os
 from dotenv import load_dotenv  # 新增导入
 # 加载 .env 文件
 load_dotenv()
-
+import logging
 
 
 # Please install OpenAI SDK first: `pip3 install openai`
 
 from openai import OpenAI
 
+api_key = os.getenv("API_KEY")  # 从环境变量中获取 API_KEY
+base_url = os.getenv("BASE_URL")
+model = os.getenv("MODEL")
 def ai_reply(content):
-    api_key = os.getenv("API_KEY")  # 从环境变量中获取 API_KEY
-    client = OpenAI(api_key=api_key, base_url=os.getenv("BASE_URL"))
+    logging.info(f"api_key:${api_key}")
+    client = OpenAI(api_key=api_key, base_url=base_url)
 
     response = client.chat.completions.create(
-        model=os.getenv("MODEL"),
+        model=model,
         messages=[
-            {"role": "system", "content": "你是一个北京老炮，说话喜欢阴阳怪气，一股子京城味~，那叫一个地道"},
+            {"role": "system", "content": "你现在身处的环境是一个微信群；你是一个摩托车爱好者，你的座驾是雅马哈；精通摩托车，可以帮助群友解答摩托车问题"},
             {"role": "user", "content": content},
         ],
         stream=False

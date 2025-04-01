@@ -28,7 +28,9 @@ logging.basicConfig(
 # 修改全局信息
 def modify_wxid(wxid):
     config.GLOBAL_WXID = wxid
+    logging.info(f"全局 wxid 设置为: {wxid}")
 
+logging.info("出发~")
 def print_login_info(wcf):
     """打印登录账号信息"""
     logging.info("\n" + "=" * 50)
@@ -38,7 +40,8 @@ def print_login_info(wcf):
     wxid = wcf.get_self_wxid()
     user_info = wcf.get_user_info()
     logging.info(f"微信号: {wxid}")
-    modify_wxid(wxid)
+    if wxid:
+       modify_wxid(wxid)
 
     logging.info(f"昵称: {user_info.get('name', '未知')}")
     logging.info(f"备注: {user_info.get('remark', '未知')}")
