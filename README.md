@@ -10,10 +10,6 @@
 
 
 ## 步骤
-在 /web 目录执行
-```npm
-npm install 
-```
 
 根目录执行
 ```pip
