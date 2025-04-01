@@ -8,7 +8,7 @@ from queue import Empty
 import os
 import threading
 from server.message_listener import listen_for_messages
-
+import config
 
 
 # 获取用户数据目录
@@ -29,7 +29,12 @@ logging.basicConfig(
     ]
 )
 
+def modify_wxid(wxid):
+    logging.info("=====修改微信号======")
+    config.GLOBAL_WXID = wxid
 
+    logging.info(config.GLOBAL_WXID)
+    logging.info("=====修改微信号end======")
 
 def print_login_info(wcf):
     """打印登录账号信息"""
@@ -40,6 +45,8 @@ def print_login_info(wcf):
     wxid = wcf.get_self_wxid()
     user_info = wcf.get_user_info()
     logging.info(f"微信号: {wxid}")
+    modify_wxid(wxid)
+
     logging.info(f"昵称: {user_info.get('name', '未知')}")
     logging.info(f"备注: {user_info.get('remark', '未知')}")
 
