@@ -9,9 +9,9 @@ import logging
 
 from openai import OpenAI
 
-api_key = os.getenv("API_KEY")  # 从环境变量中获取 API_KEY
-base_url = os.getenv("BASE_URL")
-model = os.getenv("MODEL")
+api_key = "MZmbhuoFUxUpCqCUSnNU:ovQOqmqNyPweuOdHAcZF"
+base_url = "https://spark-api-open.xf-yun.com/v1"
+model = "lite"
 def ai_reply(content):
     logging.info(f"api_key:${api_key}")
     client = OpenAI(api_key=api_key, base_url=base_url)

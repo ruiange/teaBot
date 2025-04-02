@@ -8,6 +8,7 @@ import requests  # 添加requests库导入
 import config
 from server.commander import bot_commander
 from server.send_text import send_text_message
+from server.system_message_execution import system_message_execution
 from utils.ai_reply import ai_reply
 
 import os
@@ -43,7 +44,7 @@ def listen_for_messages(wcf):
                 make_request(up_data)
                 logging.info('---------------begin--------------------')
                 logging.info(f"id：{msg.id}")
-                logging.info(f"消息类型: {get_msg_type(msg.type)}")
+                logging.info(f"消息类型: {get_msg_type(msg.type)} {msg.type}")
                 #logging.info(f"XML: {msg.xml}")
                 logging.info(f"消息发送者: {msg.sender}")
                 logging.info(f"群 id: {msg.roomid}")
@@ -56,13 +57,17 @@ def listen_for_messages(wcf):
                 logging.info(f"是否@: {msg.is_at(config.GLOBAL_WXID)}")
                 logging.info(f"是否文本: {msg.is_text()}")
 
+                # 如果消息类型是系统消息
+                if msg.type == 10000:
+                    system_message_execution(wcf, msg)
+
                 # 检查消息内容并发送回复
                 # 如果为群聊 并且内容为 我是你爸爸 则回复 我爱你
-                if msg.from_group() and msg.is_at(config.GLOBAL_WXID):
-                   reply =  ai_reply(msg.content)
-                   logging.info(reply)
-                   if reply:
-                    send_text_message(wcf, msg.roomid, reply)
+                # if msg.from_group() and msg.is_at(config.GLOBAL_WXID):
+                #    reply =  ai_reply(msg.content)
+                #    logging.info(reply)
+                #    if reply:
+                #     send_text_message(wcf, msg.roomid, reply)
 
                 # 检查是否为文本消息
                 if msg.is_text():
