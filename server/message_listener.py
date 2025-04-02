@@ -62,12 +62,11 @@ def listen_for_messages(wcf):
                     system_message_execution(wcf, msg)
 
                 # 检查消息内容并发送回复
-                # 如果为群聊 并且内容为 我是你爸爸 则回复 我爱你
-                # if msg.from_group() and msg.is_at(config.GLOBAL_WXID):
-                #    reply =  ai_reply(msg.content)
-                #    logging.info(reply)
-                #    if reply:
-                #     send_text_message(wcf, msg.roomid, reply)
+                if msg.from_group() and msg.is_at(config.GLOBAL_WXID):
+                   reply =  ai_reply(msg.content)
+                   logging.info(reply)
+                   if reply and config.GLOBAL_WXID:
+                    send_text_message(wcf, msg.roomid, reply)
 
                 # 检查是否为文本消息
                 if msg.is_text():
