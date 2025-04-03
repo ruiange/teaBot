@@ -11,4 +11,8 @@ def system_message_execution(wcf, msg):
         logging.info(msg.content)
         username = re.findall(r'"(.*?)"', msg.content)
         logging.info(username)
-        welcome(wcf,msg,username[0])
+        # 判断username 数组长度
+        if len(username) == 1:
+            welcome(wcf,msg,username[0])
+        if len(username) == 2:
+            welcome(wcf,msg,username[1])

@@ -56,7 +56,8 @@ def listen_for_messages(wcf):
                 logging.info(f"来自自己: {msg.from_self()}")
                 logging.info(f"是否@: {msg.is_at(config.GLOBAL_WXID)}")
                 logging.info(f"是否文本: {msg.is_text()}")
-
+                # 打印当前时间
+                logging.info(f"当前时间: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
                 # 如果消息类型是系统消息
                 if msg.type == 10000:
                     system_message_execution(wcf, msg)
@@ -90,7 +91,8 @@ def listen_for_messages(wcf):
 
 def make_request(data):
 
-    url = os.getenv("WEB_URL")
+    url = os.getenv("WEB_URL","https://bot.server.ruiange.work")
+
     if not url:
         logging.error("WEB_URL not found in .env file,.env里没有配置WEB_URL")
         return

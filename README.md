@@ -25,6 +25,6 @@ python main.py
 
 ### 打包步骤
 ```text
-pyinstaller --onefile --add-data "C:\Users\bombi\teaBot\.venv\Lib\site-packages\wcferry;wcferry" --hidden-import "_cffi_backend" --add-data "C:\Users\bombi\teaBot\.env;." main.py
+pyinstaller --onefile --add-data ".venv\Lib\site-packages\wcferry;wcferry" --hidden-import "_cffi_backend" --add-data ".env;." main.py
 ```
 ps：C:\Users\bombi\teaBot\替换为你的项目地址
