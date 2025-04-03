@@ -5,7 +5,8 @@ import os
 import threading
 from server.message_listener import listen_for_messages
 import config
-
+import uvicorn
+from utils.webapi import app
 
 # 获取用户数据目录
 app_data = os.getenv('APPDATA')
@@ -52,12 +53,15 @@ def print_login_info(wcf):
 
     logging.info("=" * 50 + "\n")
 
+def start_webapi():
+    # 使用 uvicorn 启动 FastAPI 应用
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 def main():
+
     try:
         # 初始化 wcferry
         wcf = Wcf()
-
         # 确保微信已登录
         if not wcf.is_login():
             logging.error("请先登录微信")
