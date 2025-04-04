@@ -85,12 +85,12 @@ def main():
         logging.info("消息监听线程已启动")
 
         # 启动 Web API 线程
-        webapi_thread = threading.Thread(
-            target=start_webapi,
-            daemon=True  # 设置为守护线程
-        )
-        webapi_thread.start()
-        logging.info("Web API 已启动")
+        # webapi_thread = threading.Thread(
+        #     target=start_webapi,
+        #     daemon=True  # 设置为守护线程
+        # )
+        # webapi_thread.start()
+        # logging.info("Web API 已启动")
 
 
         # 主循环：处理标准输入的命令
