@@ -9,7 +9,58 @@ import requests
 from server.get_friends import get_friends
 from server.send_image import send_image_message
 from server.send_rich_text import send_rich_text_message
+from server.send_xml import send_xml_message
 from utils.download import download
+
+VOICE_XML = """<?xml version="1.0"?>
+   <msg>
+       <appmsg appid="" sdkver="0">
+           <title>点我下单，开启甜蜜一天！</title>
+           <des>蜜雪冰城</des>
+           <type>33</type>
+           <url>https://mp.weixin.qq.com/mp/waerrpage?appid=wx7696c66d2245d107&amp;type=upgrade&amp;upgradetype=3#wechat_redirect</url>
+           <appattach>
+               <cdnthumburl>3057020100044b30490201000204165ac44b02032f59e1020490c7587d020467ee8310042461346463626563302d346364352d343866382d393930382d3832306263643861643230610204051408030201000405004c50b900</cdnthumburl>
+               <cdnthumbmd5>988ade2e67db1f30449b7c59be4a8ea6</cdnthumbmd5>
+               <cdnthumblength>71619</cdnthumblength>
+               <cdnthumbwidth>514</cdnthumbwidth>
+               <cdnthumbheight>411</cdnthumbheight>
+               <cdnthumbaeskey>c02a590d7ca8d0d3ccec4487d9001fae</cdnthumbaeskey>
+               <aeskey>c02a590d7ca8d0d3ccec4487d9001fae</aeskey>
+               <encryver>0</encryver>
+               <filekey>52602527714@chatroom_171_1743759397</filekey>
+           </appattach>
+           <sourceusername>gh_c5110cb8e4ba@app</sourceusername>
+           <sourcedisplayname>蜜雪冰城</sourcedisplayname>
+           <md5>988ade2e67db1f30449b7c59be4a8ea6</md5>
+           <weappinfo>
+               <username><![CDATA[gh_c5110cb8e4ba@app]]></username>
+               <appid><![CDATA[wx7696c66d2245d107]]></appid>
+               <type>2</type>
+               <version>153</version>
+               <weappiconurl><![CDATA[http://mmbiz.qpic.cn/mmbiz_png/nIXRlsiagnD95icQUiafpKbjbQZPZHsrK0ArJia2Y5IRvbUkFLpKhuKUd3zj3zVuZhKWiaiaDY4Wg3mkoM41hn332Orw/640?wx_fmt=png&wxfrom=200]]></weappiconurl>
+               <pagepath><![CDATA[pages/index/index.html?_um_ssrc=o6pFE5ag-IN2x8owXC71XPIXtTio&_um_sts=1743759395688]]></pagepath>
+               <shareId><![CDATA[0_wx7696c66d2245d107_ef58478d34b8c8af3b65cb3c2152a692_1743759396_0]]></shareId>
+               <appservicetype>0</appservicetype>
+               <brandofficialflag>0</brandofficialflag>
+               <showRelievedBuyFlag>103967</showRelievedBuyFlag>
+               <hasRelievedBuyPlugin>0</hasRelievedBuyPlugin>
+               <flagshipflag>0</flagshipflag>
+               <wxaTradeCommentScore>0</wxaTradeCommentScore>
+               <subType>0</subType>
+               <isprivatemessage>0</isprivatemessage>
+               <weapppagethumbrawurl><![CDATA[https://mxsa-oss.mxbc.net/oss/ad/20250329/1db198f0019f4eda97f6b98252508d2d.jpg]]></weapppagethumbrawurl>
+           </weappinfo>
+       </appmsg>
+       <fromusername>ruiangel</fromusername>
+       <scene>0</scene>
+       <appinfo>
+           <version>1</version>
+           <appname></appname>
+       </appinfo>
+       <commenturl></commenturl>
+   </msg>"""
+
 
 def statistics (roomid):
     headers = {
@@ -35,6 +86,9 @@ def statistics (roomid):
 def bot_commander(wcf, msg):
     logging.info("命令监听已启动，等待新命令...")
     roomid = msg.roomid
+
+    if msg.content == "/发小程序":
+        send_xml_message(wcf, roomid, VOICE_XML, 49)
 
     if msg.content == "/获取好友":
         logging.info("获取好友命令已执行")
