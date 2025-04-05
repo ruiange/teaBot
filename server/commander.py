@@ -6,9 +6,14 @@ import time
 
 import requests
 
+from server.get_chatroom_members import get_chatroom_members
+from server.get_dbs import get_dbs
 from server.get_friends import get_friends
+from server.get_tables import get_tables
+from server.query_db import query_db
 from server.send_image import send_image_message
 from server.send_rich_text import send_rich_text_message
+from server.send_text import send_text_message
 from server.send_xml import send_xml_message
 from utils.download import download
 
@@ -62,6 +67,36 @@ VOICE_XML = """<?xml version="1.0"?>
    </msg>"""
 
 
+def update_group_info(f_data,wcf,roomid):
+    headers = {
+        "Content-Type": "application/json"
+    }
+    url = os.getenv("WEB_URL", "https://bot.server.ruiange.work")
+    url = url + "/api/friends/room"
+
+    # 循环f_data，取出strNickName和strUsrName报错为新数组
+    list_data = []
+    for item in f_data:
+        if "strNickName" in item and "strUsrName" in item:
+            list_data.append({
+                "strNickName": item["strNickName"],
+                "strUsrName": item["strUsrName"]
+            })
+        else:
+            print("Error: Missing 'strNickName' or 'strUsrName' in item")
+            continue
+    params = {
+        "list_data": list_data
+    }
+    params = json.dumps(params)
+    response = requests.post(url, data=params, headers=headers)
+    if response.status_code == 200:
+        send_text_message(wcf, roomid, "更新群信息成功")
+    else:
+        print("请求失败，状态码：", response.status_code)
+
+
+
 def statistics (roomid):
     headers = {
         "Content-Type": "application/json"
@@ -83,16 +118,28 @@ def statistics (roomid):
     else:
         print("请求失败，状态码：", response.status_code)
 
+
 def bot_commander(wcf, msg):
     logging.info("命令监听已启动，等待新命令...")
     roomid = msg.roomid
+    sender = msg.sender
+    if msg.content == '/更新群'and sender=="ruiangel":
+       test_data =  query_db(wcf, 'MicroMsg.db', 'select * from Session')
+       update_group_info(test_data,wcf,roomid)
+    if msg.content == "/更新群成员" and sender=="ruiangel":
+        get_chatroom_members(wcf, roomid)
+    if msg.content == "/获取表" and sender=="ruiangel":
+        get_tables(wcf,'MicroMsg.db')
+    if msg.content == "/获取数据库" and sender=="ruiangel":
+        get_dbs(wcf)
+    if msg.content == "/发小程序" and sender=="ruiangel":
+        send_xml_message(wcf, roomid, VOICE_XML, 0x21)
 
-    if msg.content == "/发小程序":
-        send_xml_message(wcf, roomid, VOICE_XML, 49)
-
-    if msg.content == "/获取好友":
+    if msg.content == "/获取好友" and sender=="ruiangel":
         logging.info("获取好友命令已执行")
         get_friends(wcf)
+
+
 
     if msg.content == "统计":
         logging.info("统计命令已执行")

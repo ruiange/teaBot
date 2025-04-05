@@ -9,4 +9,8 @@ def send_xml_message(wcf, recipient, xml, xml_type, path: str = None):
     xml_type(int): xml类型，如：0x21为小程序 (type)
     path(str): 封面图片路径
     """
-    wcf.send_xml(recipient,xml,xml_type, path)
+    res = wcf.send_xml(recipient,xml,xml_type, path)
+    if res:
+        logging.info('发送xml消息成功')
+    else:
+        logging.info('发送xml消息失败')
