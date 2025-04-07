@@ -12,5 +12,5 @@ def auto_task(wcf):
     for i in group_list:
         if "@chatroom" in i['strUsrName']:
             group_new_list.append(i['strUsrName'])
-            get_chatroom_members(wcf, i['strUsrName'])
-    logging.info(group_new_list)
+            get_chatroom_members(wcf, i['strUsrName'],False)
+

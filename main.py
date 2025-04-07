@@ -6,6 +6,8 @@ import threading
 from server.message_listener import listen_for_messages
 import config
 import uvicorn
+
+from utils.auto_task import auto_task
 from utils.webapi import app
 
 # 获取用户数据目录
@@ -15,6 +17,8 @@ log_dir = os.path.join(app_dir, 'logs')
 
 # 创建日志目录
 os.makedirs(log_dir, exist_ok=True)
+
+interval_time = 3600
 
 # 配置日志
 logging.basicConfig(
@@ -57,6 +61,15 @@ def start_webapi():
     # 使用 uvicorn 启动 FastAPI 应用
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
+def hourly_task(wcf):
+    """每小时执行的任务"""
+    logging.info("执行每小时任务...")
+    # 这里可以添加每小时需要执行的具体任务逻辑
+    # 例如：检查某些状态、发送通知等
+    auto_task(wcf)
+    # 再次设置定时器，以便任务每小时执行一次
+    threading.Timer(interval_time, hourly_task, args=(wcf,)).start()
+
 def main():
 
     try:
@@ -84,14 +97,9 @@ def main():
         listener_thread.start()
         logging.info("消息监听线程已启动")
 
-        # 启动 Web API 线程
-        # webapi_thread = threading.Thread(
-        #     target=start_webapi,
-        #     daemon=True  # 设置为守护线程
-        # )
-        # webapi_thread.start()
-        # logging.info("Web API 已启动")
-
+        # 启动每小时定时任务
+        threading.Timer(interval_time, hourly_task, args=(wcf,)).start()
+        logging.info("每小时定时任务已启动")
 
         # 主循环：处理标准输入的命令
         while True:
@@ -101,7 +109,6 @@ def main():
                     command = input()
                 else:  # 如果是管道
                     command = sys.stdin.readline()
-
 
             except EOFError:
                 break  # 标准输入已关闭
