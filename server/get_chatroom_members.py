@@ -10,7 +10,7 @@ from server.query_db import query_db
 from server.send_text import send_text_message
 
 
-def get_chatroom_members(wcf, roomid):
+def get_chatroom_members(wcf, roomid,is_send = True):
     query_data = query_db(wcf, "MicroMsg.db", "SELECT * FROM ContactHeadImgUrl")
     res = wcf.get_chatroom_members(roomid)
 
@@ -33,7 +33,8 @@ def get_chatroom_members(wcf, roomid):
     if res:
         logging.info('获取群成员信息成功')
         logging.info(res)
-        send_text_message(wcf, roomid, "更新群成员信息成功")
+        if is_send:
+            send_text_message(wcf, roomid, "更新群成员信息成功")
         return res
     else:
         logging.info('获取群成员信息失败')

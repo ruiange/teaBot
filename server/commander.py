@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import time
+from lib2to3.fixes.fix_input import context
 
 import requests
 
@@ -15,6 +16,7 @@ from server.send_image import send_image_message
 from server.send_rich_text import send_rich_text_message
 from server.send_text import send_text_message
 from server.send_xml import send_xml_message
+from utils.auto_task import auto_task
 from utils.download import download
 
 VOICE_XML = """<?xml version="1.0"?>
@@ -67,7 +69,7 @@ VOICE_XML = """<?xml version="1.0"?>
    </msg>"""
 
 
-def update_group_info(f_data,wcf,roomid):
+def update_group_info(f_data,wcf,roomid=None):
     headers = {
         "Content-Type": "application/json"
     }
@@ -90,10 +92,12 @@ def update_group_info(f_data,wcf,roomid):
     }
     params = json.dumps(params)
     response = requests.post(url, data=params, headers=headers)
-    if response.status_code == 200:
+    if response.status_code == 200 and roomid is not None:
         send_text_message(wcf, roomid, "更新群信息成功")
     else:
         print("请求失败，状态码：", response.status_code)
+
+    return list_data
 
 
 
@@ -123,6 +127,9 @@ def bot_commander(wcf, msg):
     logging.info("命令监听已启动，等待新命令...")
     roomid = msg.roomid
     sender = msg.sender
+    content = msg.content
+    if content == '/测试' and sender=="ruiangel":
+        auto_task(wcf)
     if msg.content == '/更新群'and sender=="ruiangel":
        test_data =  query_db(wcf, 'MicroMsg.db', 'select * from Session')
        update_group_info(test_data,wcf,roomid)
