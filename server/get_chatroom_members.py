@@ -4,8 +4,7 @@ import os
 
 import requests
 
-from server.get_alias_in_chatroom import get_alias_in_chatroom
-from server.get_friends import get_friends
+
 from server.query_db import query_db
 from server.send_text import send_text_message
 
