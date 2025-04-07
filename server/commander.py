@@ -128,6 +128,40 @@ def bot_commander(wcf, msg):
     roomid = msg.roomid
     sender = msg.sender
     content = msg.content
+    if "你分享了贴吧号" in content:
+        pattern = r"#(\d+)"
+        match = re.search(pattern, content)
+        if match:
+            id_value = match.group(1)  # 获取匹配到的 ID
+            headers = {
+                "Content-Type": "application/json"
+            }
+            url = "https://tiebaapi.ruiange.work/ban/add"
+
+            params ={
+                "tieba_uid": id_value
+            }
+            params = json.dumps(params)
+            response = requests.post(url, data=params, headers=headers)
+            if response.status_code == 200:
+                json_res = json.loads(response.text)
+
+                tieba_res_data = json_res.get('data')
+                tieba_user_name = tieba_res_data.get('name')
+                # 如果name没有值 那就取 name_show
+                if tieba_user_name is None:
+                    tieba_user_name = tieba_res_data.get('name_show')
+                print("请求成功！")
+                send_text_message(wcf, roomid, f"尊贵的大人：\n[{tieba_user_name}]已被关进入小黑屋 ")
+                send_text_message(wcf, roomid, "")
+            else:
+                print("请求失败，状态码：", response.status_code)
+
+
+            print("提取到的 ID 是:", id_value)
+        else:
+            print("未找到 ID")
+
     if content == '/测试' and sender=="ruiangel":
         auto_task(wcf)
     if msg.content == '/更新群'and sender=="ruiangel":
