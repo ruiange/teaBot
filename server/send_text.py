@@ -1,4 +1,6 @@
 import logging
+import os
+
 
 def send_text_message(wcf, recipient, content, at_users=None, callback=None):
     """
@@ -10,6 +12,15 @@ def send_text_message(wcf, recipient, content, at_users=None, callback=None):
     :param callback: 回调函数，接收参数 (success: bool, error_msg: str)
     :return: (bool, str) 元组，表示 (是否成功, 错误信息)
     """
+
+    no_send = os.getenv("NO_SEND",0)
+    # no_send 转为整数类型
+    no_send = int(no_send)
+    logging.info(f"no_send{no_send}")
+    if no_send == 1:
+        logging.info("不发送")
+        return True
+
     try:
         # 发送文本消息
         if at_users:

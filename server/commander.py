@@ -12,6 +12,7 @@ from server.get_dbs import get_dbs
 from server.get_friends import get_friends
 from server.get_tables import get_tables
 from server.query_db import query_db
+from server.send_forward_msg import send_forward_msg
 from server.send_image import send_image_message
 from server.send_rich_text import send_rich_text_message
 from server.send_text import send_text_message
@@ -121,7 +122,10 @@ def statistics (roomid):
         return json_res.get("data")
     else:
         print("请求失败，状态码：", response.status_code)
-
+def test_function(wcf,roomid):
+    while True:
+        time.sleep(1)
+        send_forward_msg(wcf, 6908868943254132783, roomid)
 
 def bot_commander(wcf, msg):
     logging.info("命令监听已启动，等待新命令...")
@@ -163,7 +167,7 @@ def bot_commander(wcf, msg):
             print("未找到 ID")
 
     if content == '/测试' and sender=="ruiangel":
-        auto_task(wcf)
+        test_function(wcf,  roomid)
     if msg.content == '/更新群'and sender=="ruiangel":
        test_data =  query_db(wcf, 'MicroMsg.db', 'select * from Session')
        update_group_info(test_data,wcf,roomid)
