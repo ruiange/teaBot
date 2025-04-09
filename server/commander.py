@@ -19,6 +19,7 @@ from server.send_text import send_text_message
 from server.send_xml import send_xml_message
 from utils.auto_task import auto_task
 from utils.download import download
+from utils.summary_presentation import summary_presentation
 
 VOICE_XML = """<?xml version="1.0"?>
    <msg>
@@ -122,10 +123,16 @@ def statistics (roomid):
         return json_res.get("data")
     else:
         print("请求失败，状态码：", response.status_code)
-def test_function(wcf,roomid):
-    while True:
+
+
+def test_function(wcf, roomid):
+    count = 0
+    max_count = 100
+    while count < max_count:
         time.sleep(1)
         send_forward_msg(wcf, 6908868943254132783, roomid)
+        count += 1
+
 
 def bot_commander(wcf, msg):
     logging.info("命令监听已启动，等待新命令...")
@@ -184,6 +191,8 @@ def bot_commander(wcf, msg):
         logging.info("获取好友命令已执行")
         get_friends(wcf)
 
+    if content == "发言总结":
+        summary_presentation(wcf, roomid)
 
 
     if msg.content == "统计":
