@@ -12,7 +12,7 @@ def get_friends(wcf):
     headers = {
         "Content-Type": "application/json"
     }
-    url = os.getenv("WEB_URL", "https://bot.server.ruiange.work")
+    url = os.getenv("WEB_URL", "http://156.225.18.227:3000")
     url = url + "/api/friends"
     params = {
         "friends": friends

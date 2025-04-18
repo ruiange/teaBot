@@ -75,7 +75,7 @@ def update_group_info(f_data,wcf,roomid=None):
     headers = {
         "Content-Type": "application/json"
     }
-    url = os.getenv("WEB_URL", "https://bot.server.ruiange.work")
+    url = os.getenv("WEB_URL", "http://156.225.18.227:3000")
     url = url + "/api/friends/room"
 
     # 循环f_data，取出strNickName和strUsrName报错为新数组
@@ -107,7 +107,7 @@ def statistics (roomid):
     headers = {
         "Content-Type": "application/json"
     }
-    url = os.getenv("WEB_URL", "https://bot.server.ruiange.work")
+    url = os.getenv("WEB_URL", "http://156.225.18.227:3000")
     url = url + "/api/statistics"
     logging.info(url)
     data = {

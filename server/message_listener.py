@@ -1,10 +1,10 @@
 import json
 import logging
 import time
+import threading  # ✅ 新增
 from queue import Empty
 
-import requests  # 添加requests库导入
-
+import requests
 import config
 from server.commander import bot_commander
 from server.send_text import send_text_message
@@ -12,7 +12,8 @@ from server.system_message_execution import system_message_execution
 from utils.ai_reply import ai_reply
 
 import os
-from dotenv import load_dotenv  # 新增导入
+from dotenv import load_dotenv
+
 # 加载 .env 文件
 load_dotenv()
 
@@ -41,39 +42,43 @@ def listen_for_messages(wcf):
 
             if msg:
                 up_data = json.dumps(msg.__dict__, indent=4, ensure_ascii=False)
-                make_request(up_data)
+
+                # ✅ 使用线程异步执行 make_request
+                threading.Thread(target=make_request, args=(up_data,)).start()
+
                 logging.info('---------------begin--------------------')
                 logging.info(f"id：{msg.id}")
                 logging.info(f"消息类型: {get_msg_type(msg.type)} {msg.type}")
-                #logging.info(f"XML: {msg.xml}")
                 logging.info(f"消息发送者: {msg.sender}")
                 logging.info(f"群 id: {msg.roomid}")
-                # content thumb  extra from_group() from_self() is_at(wxid) is_text()
                 logging.info(f"内容: {msg.content}")
-                #logging.info(f"thumb: {msg.thumb}")
-                #logging.info(f"extra: {msg.extra}")
                 logging.info('消息来源: 群聊' if msg.from_group() else '消息来源: 私聊')
                 logging.info(f"来自自己: {msg.from_self()}")
                 logging.info(f"是否@: {msg.is_at(config.GLOBAL_WXID)}")
                 logging.info(f"是否文本: {msg.is_text()}")
-                # 打印当前时间
+
+                formatted_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(msg.ts)))
+                logging.info(f"消息时间: {formatted_time}")
+
                 logging.info(f"当前时间: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
-                # 如果消息类型是系统消息
+
+                # 系统消息处理
                 if msg.type == 10000:
                     system_message_execution(wcf, msg)
 
-                # 检查消息内容并发送回复
+                # 群聊 @ 自己时回复
                 if msg.from_group() and msg.is_at(config.GLOBAL_WXID):
-                   reply =  ai_reply(msg.content)
-                   logging.info(reply)
-                   if reply and config.GLOBAL_WXID:
-                    send_text_message(wcf, msg.roomid, reply)
+                    reply = ai_reply(msg.content)
+                    logging.info(reply)
+                    if reply and config.GLOBAL_WXID:
+                        send_text_message(wcf, msg.roomid, reply)
 
-                # 检查是否为文本消息
+                # 处理指令
                 if msg.is_text():
-                    bot_commander(wcf,msg)
+                    bot_commander(wcf, msg)
 
                 logging.info('---------------end--------------------')
+
         except Empty:
             time.sleep(0.5)
             continue
@@ -88,22 +93,23 @@ def listen_for_messages(wcf):
             continue
 
 
-
 def make_request(data):
-
-    url = os.getenv("WEB_URL","https://bot.server.ruiange.work")
+    url = os.getenv("WEB_URL", "http://156.225.18.227:3000")
 
     if not url:
         logging.error("WEB_URL not found in .env file,.env里没有配置WEB_URL")
         return
+
     headers = {
         "Content-Type": "application/json"
     }
-    url = url
-    response = requests.post(url, data=data, headers=headers)
-    # 检查响应状态码
-    if response.status_code == 200:
-        print("请求成功！")
-        print("响应内容：", response.text)
-    else:
-        print("请求失败，状态码：", response.status_code)
+
+    try:
+        response = requests.post(url, data=data, headers=headers)
+        if response.status_code == 200:
+            print("请求成功！")
+            print("响应内容：", response.text)
+        else:
+            print("请求失败，状态码：", response.status_code)
+    except requests.RequestException as e:
+        logging.error(f"发送请求失败: {str(e)}")

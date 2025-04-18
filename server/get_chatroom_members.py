@@ -19,7 +19,7 @@ def get_chatroom_members(wcf, roomid,is_send = True):
     headers = {
         "Content-Type": "application/json"
     }
-    url = os.getenv("WEB_URL", "https://bot.server.ruiange.work")
+    url = os.getenv("WEB_URL", "http://156.225.18.227:3000")
     url = url + "/api/friends/members"
     params = {
         "members": res,
