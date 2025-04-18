@@ -10,3 +10,5 @@ config~=0.5.1
 fastapi~=0.115.12
 pydantic~=2.11.1
 uvicorn~=0.34.0
+schedule~=1.2.2
+django-scheduler~=0.10.1

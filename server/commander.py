@@ -134,6 +134,8 @@ def test_function(wcf, roomid):
         count += 1
 
 
+
+
 def bot_commander(wcf, msg):
     logging.info("命令监听已启动，等待新命令...")
     roomid = msg.roomid

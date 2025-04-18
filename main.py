@@ -10,6 +10,12 @@ import uvicorn
 from utils.auto_task import auto_task
 from utils.webapi import app
 
+import schedule
+import time
+from datetime import datetime
+
+from utils.week_task import weekly_send_group_msg, run_schedule
+
 # 获取用户数据目录
 app_data = os.getenv('APPDATA')
 app_dir = os.path.join(app_data, 'new-boy')
@@ -36,63 +42,57 @@ def modify_wxid(wxid):
     logging.info(f"全局 wxid 设置为: {wxid}")
 
 logging.info("出发~")
+
 def print_login_info(wcf):
     """打印登录账号信息"""
     logging.info("\n" + "=" * 50)
     logging.info("登录账号信息：")
 
-    # 获取个人信息
     wxid = wcf.get_self_wxid()
     user_info = wcf.get_user_info()
     logging.info(f"微信号: {wxid}")
     if wxid:
-       modify_wxid(wxid)
+        modify_wxid(wxid)
 
     logging.info(f"昵称: {user_info.get('name', '未知')}")
     logging.info(f"备注: {user_info.get('remark', '未知')}")
 
-    # 获取好友数量
     friends = wcf.get_friends()
     logging.info(f"好友数量: {len(friends) if friends else 0}")
 
     logging.info("=" * 50 + "\n")
 
 def start_webapi():
-    # 使用 uvicorn 启动 FastAPI 应用
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 def hourly_task(wcf):
     """每小时执行的任务"""
     logging.info("执行每小时任务...")
-    # 这里可以添加每小时需要执行的具体任务逻辑
-    # 例如：检查某些状态、发送通知等
     auto_task(wcf)
-    # 再次设置定时器，以便任务每小时执行一次
     threading.Timer(interval_time, hourly_task, args=(wcf,)).start()
 
-def main():
 
+
+
+
+def main():
     try:
-        # 初始化 wcferry
         wcf = Wcf()
-        # 确保微信已登录
         if not wcf.is_login():
             logging.error("请先登录微信")
             return
 
-        # 检查消息接收状态
         if not wcf.is_receiving_msg():
             logging.info("启用消息接收功能...")
             wcf.enable_receiving_msg()
 
-        # 打印登录信息
         print_login_info(wcf)
 
         # 启动消息监听线程
         listener_thread = threading.Thread(
             target=listen_for_messages,
             args=(wcf,),
-            daemon=True  # 设置为守护线程，这样主程序退出时会自动结束
+            daemon=True
         )
         listener_thread.start()
         logging.info("消息监听线程已启动")
@@ -101,17 +101,24 @@ def main():
         threading.Timer(interval_time, hourly_task, args=(wcf,)).start()
         logging.info("每小时定时任务已启动")
 
-        # 主循环：处理标准输入的命令
+        # 启动每周定时打印时间任务
+        schedule_thread = threading.Thread(
+            target=run_schedule(wcf),
+            daemon=True
+        )
+        schedule_thread.start()
+        logging.info("每周定时打印时间任务已启动")
+
+        # 主循环
         while True:
             try:
-                # 非阻塞方式读取标准输入
-                if sys.stdin.isatty():  # 如果是终端
+                if sys.stdin.isatty():
                     command = input()
-                else:  # 如果是管道
+                else:
                     command = sys.stdin.readline()
 
             except EOFError:
-                break  # 标准输入已关闭
+                break
             except Exception as e:
                 logging.error(f"处理输入时出错: {str(e)}")
                 continue
